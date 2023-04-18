@@ -8,7 +8,7 @@ import SearchBar from '../../components/SearchBar'
 const search = () => {
     const [searchValue, setSearchValue] = useState('')
     return (
-        <SafeAreaView style={{ backgroundColor: COLORS.backdrop }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.backdrop }}>
             <SearchBar onChange={setSearchValue} value={'Search for album'} />
             <View>
                 <FlatList
