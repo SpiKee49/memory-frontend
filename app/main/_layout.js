@@ -71,7 +71,7 @@ const Layout = () => {
                     tabBarIcon: ({ color }) => (
                         <UserGroupIcon color={color} size={24} />
                     ),
-                    tabBarLabel: 'Friend',
+                    tabBarLabel: 'Friends',
                 }}
             />
         </Tabs>

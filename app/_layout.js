@@ -34,7 +34,7 @@ const Layout = () => {
                 ),
                 headerRight: () => (
                     <TouchableOpacity style={{ paddingHorizontal: 10 }}>
-                        <UserCircleIcon color={COLORS.secondary} />
+                        <UserCircleIcon color={COLORS.secondary} size={24} />
                     </TouchableOpacity>
                 ),
                 headerTitle: '',
