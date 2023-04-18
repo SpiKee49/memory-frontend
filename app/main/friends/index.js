@@ -15,7 +15,7 @@ import SearchBar from '../../../components/SearchBar'
 
 const friends = () => {
     const [searchValue, setSearchValue] = useState('')
-    const [isFriendList, setIsFriendList] = useState(false)
+    const [isFriendList, setIsFriendList] = useState(true)
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.backdrop }}>

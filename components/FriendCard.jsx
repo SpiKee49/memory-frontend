@@ -50,7 +50,7 @@ function FriendCard(props) {
                             fontWeight: 'bold',
                         }}
                     >
-                        Friend's name
+                        {isFriend ? "Friend's name" : 'Profile name'}
                     </Text>
                 </View>
                 {isFriend && (

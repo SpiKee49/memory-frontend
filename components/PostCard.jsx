@@ -1,10 +1,10 @@
 import { COLORS, SIZES } from '../constants/theme'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
 
+import { HeartIcon } from 'react-native-heroicons/solid'
 import React from 'react'
-import { StarIcon } from 'react-native-heroicons/solid'
 
-function AlbumCard(props) {
+const PostCard = () => {
     return (
         <View
             style={{
@@ -15,6 +15,23 @@ function AlbumCard(props) {
                 borderRadius: 25,
             }}
         >
+            <View
+                style={{
+                    flex: 1,
+                }}
+            >
+                <Image
+                    style={{
+                        flex: 1,
+                        width: undefined,
+                        height: undefined,
+                        borderTopLeftRadius: 25,
+                        borderTopRightRadius: 25,
+                    }}
+                    source={require('../public/images/placeholder-image.jpg')}
+                    resizeMode="cover"
+                />
+            </View>
             <View
                 style={{
                     marginVertical: 10,
@@ -32,7 +49,7 @@ function AlbumCard(props) {
                             fontWeight: 'bold',
                         }}
                     >
-                        Album name
+                        Post Title
                     </Text>
                     <Text
                         style={{
@@ -40,34 +57,24 @@ function AlbumCard(props) {
                             fontSize: SIZES.sm,
                         }}
                     >
-                        Short album description / tags
+                        Post description
                     </Text>
                 </View>
-
-                <TouchableOpacity style={{ opacity: 0.2 }}>
-                    <StarIcon color={COLORS.secondary} />
-                </TouchableOpacity>
-            </View>
-            <TouchableOpacity
-                style={{
-                    flex: 1,
-                }}
-                onPress={props.onPress}
-            >
-                <Image
+                <View
                     style={{
-                        flex: 1,
-                        width: undefined,
-                        height: undefined,
-                        borderBottomLeftRadius: 25,
-                        borderBottomRightRadius: 25,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        gap: 5,
                     }}
-                    source={require('../public/images/placeholder-image.jpg')}
-                    resizeMode="cover"
-                />
-            </TouchableOpacity>
+                >
+                    <TouchableOpacity>
+                        <HeartIcon size={24} color={COLORS.secondary} />
+                    </TouchableOpacity>
+                    <Text style={{ color: COLORS.secondary }}>1111</Text>
+                </View>
+            </View>
         </View>
     )
 }
 
-export default AlbumCard
+export default PostCard

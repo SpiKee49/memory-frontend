@@ -6,13 +6,14 @@ import {
     UserGroupIcon,
 } from 'react-native-heroicons/solid'
 
+import { BottomTabBar } from '@react-navigation/bottom-tabs'
 import { COLORS } from '../../constants/theme'
 import { Tabs } from 'expo-router'
 
 const Layout = () => {
     return (
         <Tabs
-            screenOptions={{
+            screenOptions={({ route }) => ({
                 headerShown: false,
                 tabBarStyle: {
                     backgroundColor: COLORS.primary,
@@ -21,13 +22,18 @@ const Layout = () => {
                 tabBarLabelStyle: {
                     marginBottom: 10,
                 },
+                tabBarButton: ['account', 'album/[id]'].includes(route.name)
+                    ? () => {
+                          return null
+                      }
+                    : undefined,
                 tabBarIconStyle: { marginTop: 10 },
                 tabBarLabelPosition: 'below-icon',
                 headerShadowVisible: false,
                 tabBarActiveTintColor: COLORS.secondaryHover,
                 tabBarInactiveTintColor: COLORS.secondary,
                 tabBarActiveBackgroundColor: COLORS.primaryHover,
-            }}
+            })}
         >
             <Tabs.Screen
                 name="home"

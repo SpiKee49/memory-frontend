@@ -17,7 +17,7 @@ const Layout = () => {
                 headerLeft: () => (
                     <TouchableOpacity
                         style={{
-                            paddingHorizontal: 20,
+                            paddingHorizontal: 10,
                         }}
                         onPress={() => router.push('/main/home')}
                     >
@@ -33,8 +33,11 @@ const Layout = () => {
                     </TouchableOpacity>
                 ),
                 headerRight: () => (
-                    <TouchableOpacity style={{ paddingHorizontal: 10 }}>
-                        <UserCircleIcon color={COLORS.secondary} size={24} />
+                    <TouchableOpacity
+                        style={{ paddingHorizontal: 10 }}
+                        onPress={() => router.push('/main/account')}
+                    >
+                        <UserCircleIcon color={'white'} size={28} />
                     </TouchableOpacity>
                 ),
                 headerTitle: '',
