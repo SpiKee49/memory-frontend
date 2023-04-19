@@ -68,7 +68,6 @@ const addPost = () => {
                 {/* Select Album Modal */}
                 <Modal
                     animationType="slide"
-                    transparent={true}
                     visible={albumModalVisible}
                     onRequestClose={() => {
                         setAlbumModalVisible(!albumModalVisible)
@@ -216,10 +215,9 @@ const styles = StyleSheet.create({
         gap: 10,
     },
     centeredView: {
-        flex: 1,
+        width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 22,
     },
     buttonStyle: {
         backgroundColor: COLORS.secondaryHover,
