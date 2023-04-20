@@ -19,7 +19,7 @@ import React, { useState } from 'react'
 import SearchBar from '../../components/SearchBar'
 
 const addPost = () => {
-    const [albumModalVisible, setAlbumModalVisible] = useState(false)
+    const [albumModalVisible, setAlbumModalVisible] = useState(true)
     const [locationModalVisible, setLocationModalVisible] = useState(false)
     const [searchAlbum, setSearchAlbum] = useState('')
     const [searchLocation, setSearchLocation] = useState('')
@@ -69,6 +69,7 @@ const addPost = () => {
                 <Modal
                     animationType="slide"
                     visible={albumModalVisible}
+                    transparent={true}
                     onRequestClose={() => {
                         setAlbumModalVisible(!albumModalVisible)
                     }}
@@ -86,11 +87,19 @@ const addPost = () => {
                                 <Text
                                     style={[
                                         styles.modalText,
-                                        { textAlign: 'left' },
+                                        { textAlign: 'center' },
                                     ]}
                                 >
-                                    Albums:
+                                    Albums
                                 </Text>
+                                <View
+                                    style={{
+                                        marginVertical: 10,
+                                        borderBottomColor: COLORS.secondary,
+                                        borderBottomWidth:
+                                            StyleSheet.hairlineWidth,
+                                    }}
+                                />
                                 <FlatList
                                     data={[1, 2, 3, 4, 5]}
                                     renderItem={({ item }) => (
@@ -98,7 +107,7 @@ const addPost = () => {
                                             style={styles.default}
                                         >
                                             <Text style={styles.textStyle}>
-                                                Tasty Location {item}
+                                                Tasty Album {item}
                                             </Text>
                                         </TouchableOpacity>
                                     )}
@@ -146,11 +155,19 @@ const addPost = () => {
                                 <Text
                                     style={[
                                         styles.modalText,
-                                        { textAlign: 'left' },
+                                        { textAlign: 'center' },
                                     ]}
                                 >
-                                    Locations:
+                                    Locations
                                 </Text>
+                                <View
+                                    style={{
+                                        marginVertical: 10,
+                                        borderBottomColor: COLORS.secondary,
+                                        borderBottomWidth:
+                                            StyleSheet.hairlineWidth,
+                                    }}
+                                />
                                 <FlatList
                                     data={[1, 2, 3, 4, 5]}
                                     renderItem={({ item }) => (
@@ -215,9 +232,34 @@ const styles = StyleSheet.create({
         gap: 10,
     },
     centeredView: {
-        width: '100%',
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    modalView: {
+        flex: 1,
+        width: '100%',
+        backgroundColor: COLORS.primary,
+        borderRadius: 20,
+        marginTop: 150,
+        marginHorizontal: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    modalText: {
+        fontSize: SIZES.lg,
+        color: COLORS.secondaryHover,
+    },
+    modalAlbumList: {
+        width: '100%',
     },
     buttonStyle: {
         backgroundColor: COLORS.secondaryHover,
