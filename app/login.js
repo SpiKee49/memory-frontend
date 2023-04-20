@@ -1,8 +1,23 @@
 import { COLORS, SIZES } from '../constants/theme'
 import React, { useState } from 'react'
-import { SafeAreaView, Text, TextInput, View } from 'react-native'
+import {
+    SafeAreaView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
+} from 'react-native'
+import { Stack, useRouter } from 'expo-router'
 
-const login = () => {
+import { API_URL } from '@env'
+import { UserContext } from './_layout'
+import axios from 'axios'
+
+const Login = () => {
+    const router = useRouter()
+
+    const { setCurrentUser } = React.useContext(UserContext)
     const [isRegister, setIsRegister] = useState(false)
     const [username, setUsername] = useState('')
     const [profileName, setProfileName] = useState('')
@@ -10,22 +25,73 @@ const login = () => {
     const [password, setPassword] = useState('')
     const [repeatPassword, setRepeatPassword] = useState('')
 
+    const login = async () => {
+        try {
+            console.log(username, password)
+            const user = await axios.post(`${API_URL}/api/users/login`, {
+                username,
+                password,
+            })
+            setCurrentUser(user.data)
+            router.push('/main/home')
+        } catch (error) {
+            console.error(error) // NOTE - use "error.response.data` (not "error")
+        }
+    }
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.backdrop }}>
+            <Stack.Screen
+                options={{
+                    headerShown: false,
+                }}
+            />
             <View
                 style={{
-                    height: 600,
+                    flex: 1,
                     justifyContent: 'center',
-                    alignItems: 'flex-start',
+                    alignItems: 'center',
                     paddingVertical: 10,
                     paddingHorizontal: 10,
                 }}
             >
+                <View
+                    style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginBottom: 40,
+                        gap: 5,
+                    }}
+                >
+                    <Text
+                        style={{
+                            color: '#fff',
+                            fontSize: SIZES.xxl,
+                            fontWeight: 'bold',
+                            paddingHorizontal: 40,
+                            paddingBottom: 5,
+                            borderBottomWidth: 1,
+                            borderBottomColor: COLORS.secondary,
+                        }}
+                    >
+                        Memory
+                    </Text>
+                    <Text
+                        style={{
+                            color: COLORS.secondary,
+                            fontSize: SIZES.md,
+                            fontStyle: 'italic',
+                        }}
+                    >
+                        for moments to remember
+                    </Text>
+                </View>
                 <TextInput
                     style={styles.default}
                     placeholder="Username"
-                    value={username}
-                    onTextChange={setUsername}
+                    onChangeText={(text) => {
+                        setUsername(text)
+                    }}
                     placeholderTextColor={COLORS.secondary}
                 />
                 {isRegister && (
@@ -33,7 +99,7 @@ const login = () => {
                         style={styles.default}
                         placeholder="Profile name"
                         value={profileName}
-                        onTextChange={setProfileName}
+                        onChangeText={setProfileName}
                         placeholderTextColor={COLORS.secondary}
                     />
                 )}
@@ -42,7 +108,7 @@ const login = () => {
                         style={styles.default}
                         placeholder="E-mail"
                         value={email}
-                        onTextChange={setEmail}
+                        onChangeText={setEmail}
                         placeholderTextColor={COLORS.secondary}
                     />
                 )}
@@ -51,7 +117,7 @@ const login = () => {
                     placeholder="Password"
                     secureTextEntry={true}
                     value={password}
-                    onTextChange={setPassword}
+                    onChangeText={setPassword}
                     placeholderTextColor={COLORS.secondary}
                 />
                 {isRegister && (
@@ -60,7 +126,7 @@ const login = () => {
                         placeholder="Repeat password"
                         secureTextEntry={true}
                         value={repeatPassword}
-                        onTextChange={setRepeatPassword}
+                        onChangeText={setRepeatPassword}
                         placeholderTextColor={COLORS.secondary}
                     />
                 )}
@@ -68,7 +134,7 @@ const login = () => {
                 {/*Register Button*/}
                 <TouchableOpacity
                     style={[styles.buttonStyle]}
-                    onPress={() => {}}
+                    onPress={isRegister ? () => {} : () => login()}
                 >
                     <Text style={[styles.buttonText, { fontSize: SIZES.md }]}>
                         {isRegister ? 'Register' : 'Login'}
@@ -76,12 +142,13 @@ const login = () => {
                 </TouchableOpacity>
 
                 {/*Login/Register switch*/}
-                <TouchableOpacity onPress={() => isRegister(!isRegister)}>
+                <TouchableOpacity onPress={() => setIsRegister(!isRegister)}>
                     <Text
-                        style={[
-                            styles.buttonText,
-                            { fontSize: SIZES.md, textDecoration: 'underline' },
-                        ]}
+                        style={{
+                            fontSize: SIZES.md,
+                            color: COLORS.secondary,
+                            marginTop: 10,
+                        }}
                     >
                         {isRegister ? 'Log in' : 'Sign up'}
                     </Text>
@@ -97,6 +164,8 @@ const styles = StyleSheet.create({
         marginTop: 10,
         width: '100%',
         padding: 10,
+        color: COLORS.secondaryHover,
+        fontWeight: 'bold',
         borderRadius: SIZES.sm,
     },
     centeredView: {
@@ -123,4 +192,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default login
+export default Login

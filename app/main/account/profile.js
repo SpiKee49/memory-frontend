@@ -4,8 +4,10 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native'
 import { UserCircleIcon } from 'react-native-heroicons/solid'
+import { UserContext } from '../../_layout'
 
 const profile = () => {
+    const { currentUser, setCurrentUser } = React.useContext(UserContext)
     return (
         <SafeAreaView
             style={{ flex: 1, backgroundColor: COLORS.backdrop, gap: 20 }}
@@ -22,9 +24,15 @@ const profile = () => {
                     size={84}
                     style={{ width: 20 }}
                 />
-                <Text style={styles.profileData}>Full name</Text>
-                <Text style={styles.profileData}>username</Text>
-                <Text style={styles.profileData}>email@email.com</Text>
+                <Text style={styles.profileData}>
+                    {currentUser.profileName ?? 'Full name'}
+                </Text>
+                <Text style={styles.profileData}>
+                    {currentUser.username ?? 'username'}
+                </Text>
+                <Text style={styles.profileData}>
+                    {currentUser.email ?? 'email'}
+                </Text>
             </View>
             <View>
                 <TouchableOpacity style={styles.button} onPress={() => {}}>
