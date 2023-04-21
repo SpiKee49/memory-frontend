@@ -16,10 +16,11 @@ import {
 } from 'react-native-heroicons/solid'
 import React, { useState } from 'react'
 
+import FormButton from '../../components/FormButton'
 import SearchBar from '../../components/SearchBar'
 
 const addPost = () => {
-    const [albumModalVisible, setAlbumModalVisible] = useState(true)
+    const [albumModalVisible, setAlbumModalVisible] = useState(false)
     const [locationModalVisible, setLocationModalVisible] = useState(false)
     const [searchAlbum, setSearchAlbum] = useState('')
     const [searchLocation, setSearchLocation] = useState('')
@@ -195,13 +196,12 @@ const addPost = () => {
                         </View>
                     </View>
                 </Modal>
-                <TouchableOpacity
-                    style={[styles.default, styles.buttonWithIcon]}
+                <FormButton
                     onPress={() => setLocationModalVisible(true)}
-                >
-                    <GlobeAltIcon size={24} color={COLORS.secondary} />
-                    <Text style={styles.textStyle}>Select Location</Text>
-                </TouchableOpacity>
+                    text={'Select Location'}
+                    icon={<GlobeAltIcon size={24} color={COLORS.secondary} />}
+                    hihglighted
+                />
 
                 {/* Create Post Button */}
                 <TouchableOpacity

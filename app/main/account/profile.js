@@ -1,7 +1,8 @@
 import { COLORS, SIZES } from '../../../constants/theme'
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Modal, StyleSheet, Text, TextInput, View } from 'react-native'
+import React, { useState } from 'react'
 
-import React from 'react'
+import FormButton from '../../../components/FormButton'
 import { SafeAreaView } from 'react-native'
 import { UserCircleIcon } from 'react-native-heroicons/solid'
 import { UserContext } from '../../_layout'
@@ -31,17 +32,17 @@ const profile = () => {
                     style={{ width: 20 }}
                 />
                 <Text style={styles.profileData}>
-                    {currentUser.profileName ?? 'Full name'}
+                    {currentUser?.profileName ?? 'Full name'}
                 </Text>
                 <Text style={styles.profileData}>
-                    {currentUser.username ?? 'username'}
+                    {currentUser?.username ?? 'username'}
                 </Text>
                 <Text style={styles.profileData}>
-                    {currentUser.email ?? 'email'}
+                    {currentUser?.email ?? 'email'}
                 </Text>
             </View>
             <View>
-                {/* Change Name Modal */}    
+                {/* Change Name Modal */}
                 <Modal
                     animationType="slide"
                     visible={nameModalVisible}
@@ -52,38 +53,35 @@ const profile = () => {
                 >
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
-                            <Text style={styles.modalText}>
-                                Change Name
-                            </Text>
-                            <TextInput 
+                            <Text style={styles.modalText}>Change Name</Text>
+                            <TextInput
                                 style={styles.default}
                                 placeholder="New profile name"
                                 value={profileName}
                                 onChangeText={setProfileName}
                                 placeholderTextColor={COLORS.secondary}
-                                >
-                            </TextInput>
-                            <Text style={[styles.textStyle, styles.buttonText]}>
-                                Confirm changes
-                            </Text>
-                            <TouchableOpacity
-                                style={styles.buttonStyle}
+                            ></TextInput>
+                            <FormButton
                                 onPress={() =>
                                     setNameModalVisible(!nameModalVisible)
                                 }
-                            >
-                                <Text style={styles.buttonText}>Go back</Text>
-                            </TouchableOpacity>
+                                text={'Confirm changes'}
+                                highlighted
+                            />
+                            <FormButton
+                                onPress={() =>
+                                    setNameModalVisible(!nameModalVisible)
+                                }
+                                text={'Go Back'}
+                                highlighted
+                            />
                         </View>
                     </View>
                 </Modal>
-                <TouchableOpacity
-                    style={[styles.default, styles.buttonWithIcon]}
+                <FormButton
                     onPress={() => setNameModalVisible(true)}
-                >
-                    <FolderIcon size={24} color={COLORS.secondary} />
-                    <Text style={styles.textStyle}>Change Name</Text>
-                </TouchableOpacity>
+                    text={'Change Name'}
+                />
 
                 {/* Change E-mail Modal */}
                 <Modal
@@ -96,39 +94,36 @@ const profile = () => {
                 >
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
-                            <Text style={styles.modalText}>
-                                Change E-mail
-                            </Text>
-                            <TextInput 
+                            <Text style={styles.modalText}>Change E-mail</Text>
+                            <TextInput
                                 style={styles.default}
                                 placeholder="New e-mail"
                                 value={email}
                                 onChangeText={setEmail}
                                 placeholderTextColor={COLORS.secondary}
                                 keyboardType="email-address"
-                                >
-                            </TextInput>
-                            <Text style={[styles.textStyle, styles.buttonText]}>
-                                Confirm changes
-                            </Text>
-                            <TouchableOpacity
-                                style={styles.buttonStyle}
+                            ></TextInput>
+                            <FormButton
                                 onPress={() =>
                                     setEmailModalVisible(!emailModalVisible)
                                 }
-                            >
-                                <Text style={styles.buttonText}>Go back</Text>
-                            </TouchableOpacity>
+                                text={'Confirm changes'}
+                                highlighted
+                            />
+                            <FormButton
+                                onPress={() =>
+                                    setEmailModalVisible(!emailModalVisible)
+                                }
+                                text={'Go Back'}
+                                highlighted
+                            />
                         </View>
                     </View>
                 </Modal>
-                <TouchableOpacity
-                    style={[styles.default, styles.buttonWithIcon]}
+                <FormButton
                     onPress={() => setEmailModalVisible(true)}
-                >
-                    <FolderIcon size={24} color={COLORS.secondary} />
-                    <Text style={styles.textStyle}>Change Email</Text>
-                </TouchableOpacity>
+                    text={'Change Email'}
+                />
 
                 {/* Change Password Modal */}
                 <Modal
@@ -142,47 +137,60 @@ const profile = () => {
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
                             <Text style={styles.modalText}>
-                                Change Name
+                                Change Password
                             </Text>
-                            <TextInput 
+                            <TextInput
                                 style={styles.default}
-                                placeholder="Password"
+                                placeholder="Old Password"
                                 secureTextEntry={true}
                                 value={password}
                                 onChangeText={setPassword}
                                 placeholderTextColor={COLORS.secondary}
-                                >
-                            </TextInput>
-                            <Text style={[styles.textStyle, styles.buttonText]}>
-                                Confirm changes
-                            </Text>
-                            <TouchableOpacity
-                                style={styles.buttonStyle}
+                            />
+                            <TextInput
+                                style={styles.default}
+                                placeholder="New Password"
+                                secureTextEntry={true}
+                                value={password}
+                                onChangeText={setPassword}
+                                placeholderTextColor={COLORS.secondary}
+                            />
+                            <TextInput
+                                style={styles.default}
+                                placeholder="Repeate Password"
+                                secureTextEntry={true}
+                                value={password}
+                                onChangeText={setPassword}
+                                placeholderTextColor={COLORS.secondary}
+                            />
+
+                            <FormButton
                                 onPress={() =>
-                                    setPasswordModalVisible(!passwordModalVisible)
+                                    setPasswordModalVisible(
+                                        !passwordModalVisible
+                                    )
                                 }
-                            >
-                                <Text style={styles.buttonText}>Go back</Text>
-                            </TouchableOpacity>
+                                text={'Confirm changes'}
+                                highlighted
+                            />
+                            <FormButton
+                                onPress={() =>
+                                    setPasswordModalVisible(
+                                        !passwordModalVisible
+                                    )
+                                }
+                                text={'Go back'}
+                                highlighted
+                            />
                         </View>
                     </View>
                 </Modal>
-                <TouchableOpacity
-                    style={[styles.default, styles.buttonWithIcon]}
+                <FormButton
                     onPress={() => setPasswordModalVisible(true)}
-                >
-                    <FolderIcon size={24} color={COLORS.secondary} />
-                    <Text style={styles.textStyle}>Change Password</Text>
-                </TouchableOpacity>
+                    text={'Change Password'}
+                />
             </View>
-            <TouchableOpacity
-                style={[styles.button, styles.buttonStyle]}
-                onPress={() => {}}
-            >
-                <Text style={[styles.textStyle, styles.buttonText]}>
-                    Log out
-                </Text>
-            </TouchableOpacity>
+            <FormButton onPress={() => {}} text={'Log out'} highlighted />
         </SafeAreaView>
     )
 }
@@ -193,23 +201,42 @@ const styles = StyleSheet.create({
         color: COLORS.secondary,
         textAlign: 'center',
     },
-    buttonStyle: {
-        backgroundColor: COLORS.secondaryHover,
-    },
-    button: {
+    default: {
         backgroundColor: COLORS.primaryHover,
         marginTop: 10,
-        marginHorizontal: 10,
+        width: '100%',
         padding: 10,
         borderRadius: SIZES.sm,
     },
-    textStyle: {
-        color: COLORS.secondaryHover,
-        fontWeight: 'bold',
-        textAlign: 'center',
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-    buttonText: {
-        color: COLORS.primary,
+    modalView: {
+        flex: 1,
+        width: '100%',
+        backgroundColor: COLORS.primary,
+        borderRadius: 20,
+        marginTop: 150,
+        marginHorizontal: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    modalText: {
+        fontSize: SIZES.lg,
+        color: COLORS.secondaryHover,
+    },
+    modalAlbumList: {
+        width: '100%',
     },
 })
 
