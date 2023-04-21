@@ -115,24 +115,21 @@ const addPost = () => {
                                     keyExtractor={(item) => item}
                                 />
                             </View>
-                            <TouchableOpacity
-                                style={styles.buttonStyle}
+                            <FormButton
                                 onPress={() =>
                                     setAlbumModalVisible(!albumModalVisible)
                                 }
-                            >
-                                <Text style={styles.buttonText}>Go back</Text>
-                            </TouchableOpacity>
+                                text={'Go back'}
+                                highlighted
+                            />
                         </View>
                     </View>
                 </Modal>
-                <TouchableOpacity
-                    style={[styles.default, styles.buttonWithIcon]}
+                <FormButton
                     onPress={() => setAlbumModalVisible(true)}
-                >
-                    <FolderIcon size={24} color={COLORS.secondary} />
-                    <Text style={styles.textStyle}>Select Album</Text>
-                </TouchableOpacity>
+                    icon={<FolderIcon size={24} color={COLORS.secondary} />}
+                    text={'Select Album'}
+                />
 
                 {/* Select Location Modal */}
                 <Modal
@@ -183,16 +180,15 @@ const addPost = () => {
                                     keyExtractor={(item) => item}
                                 />
                             </View>
-                            <TouchableOpacity
-                                style={styles.buttonStyle}
+                            <FormButton
                                 onPress={() =>
                                     setLocationModalVisible(
                                         !locationModalVisible
                                     )
                                 }
-                            >
-                                <Text style={styles.buttonText}>Go back</Text>
-                            </TouchableOpacity>
+                                text={'Go back'}
+                                highlighted
+                            />
                         </View>
                     </View>
                 </Modal>
@@ -200,18 +196,14 @@ const addPost = () => {
                     onPress={() => setLocationModalVisible(true)}
                     text={'Select Location'}
                     icon={<GlobeAltIcon size={24} color={COLORS.secondary} />}
-                    hihglighted
                 />
 
                 {/* Create Post Button */}
-                <TouchableOpacity
-                    style={[styles.buttonStyle, styles.buttonWithIcon]}
+                <FormButton
                     onPress={() => setLocationModalVisible(true)}
-                >
-                    <Text style={[styles.buttonText, { fontSize: SIZES.md }]}>
-                        Add post
-                    </Text>
-                </TouchableOpacity>
+                    text={'Add post'}
+                    highlighted
+                />
             </View>
         </SafeAreaView>
     )
@@ -224,12 +216,6 @@ const styles = StyleSheet.create({
         width: '100%',
         padding: 10,
         borderRadius: SIZES.sm,
-    },
-    buttonWithIcon: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 10,
     },
     centeredView: {
         flex: 1,
@@ -260,23 +246,6 @@ const styles = StyleSheet.create({
     },
     modalAlbumList: {
         width: '100%',
-    },
-    buttonStyle: {
-        backgroundColor: COLORS.secondaryHover,
-        marginTop: 10,
-        width: '100%',
-        padding: 10,
-        borderRadius: SIZES.sm,
-    },
-    buttonText: {
-        color: COLORS.primary,
-        textAlign: 'center',
-        fontWeight: 'bold',
-    },
-    textStyle: {
-        color: COLORS.secondaryHover,
-        fontWeight: 'bold',
-        textAlign: 'center',
     },
 })
 
