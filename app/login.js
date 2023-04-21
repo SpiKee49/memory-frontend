@@ -1,5 +1,5 @@
 import { COLORS, SIZES } from '../constants/theme'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     SafeAreaView,
     StyleSheet,
@@ -19,15 +19,14 @@ const Login = () => {
 
     const { setCurrentUser } = React.useContext(UserContext)
     const [isRegister, setIsRegister] = useState(false)
-    const [username, setUsername] = useState('')
+    const [username, setUsername] = useState('spikee')
     const [profileName, setProfileName] = useState('')
     const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [password, setPassword] = useState('tvojamamamou')
     const [repeatPassword, setRepeatPassword] = useState('')
 
     const login = async () => {
         try {
-            console.log(username, password)
             const user = await axios.post(`${API_URL}/api/users/login`, {
                 username,
                 password,
@@ -35,9 +34,14 @@ const Login = () => {
             setCurrentUser(user.data)
             router.push('/main/home')
         } catch (error) {
-            console.error(error) // NOTE - use "error.response.data` (not "error")
+            console.error(error)
         }
     }
+
+    // On component creation
+    useEffect(() => {
+        login()
+    }, [])
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.backdrop }}>

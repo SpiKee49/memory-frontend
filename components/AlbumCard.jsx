@@ -24,7 +24,7 @@ function AlbumCard(props) {
                     justifyContent: 'space-between',
                 }}
             >
-                <View>
+                <View style={{ width: '85%' }}>
                     <Text
                         style={{
                             color: COLORS.secondaryHover,
@@ -32,7 +32,7 @@ function AlbumCard(props) {
                             fontWeight: 'bold',
                         }}
                     >
-                        Album name
+                        {props.album.title ?? 'Album Title'}
                     </Text>
                     <Text
                         style={{
@@ -40,7 +40,8 @@ function AlbumCard(props) {
                             fontSize: SIZES.sm,
                         }}
                     >
-                        Short album description / tags
+                        {props.album.description ??
+                            'Short album description / tags'}
                     </Text>
                 </View>
 
