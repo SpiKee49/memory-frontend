@@ -1,4 +1,4 @@
-import { FlatList, SafeAreaView, Text, View } from 'react-native'
+import { ActivityIndicator, FlatList, SafeAreaView, View } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 
 import { API_URL } from '@env'
@@ -36,7 +36,11 @@ const Home = () => {
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.backdrop }}>
             <View>
                 {albums.length === 0 ? (
-                    <Text>Looks like you don't follow any albums </Text>
+                    <ActivityIndicator
+                        size="large"
+                        color={COLORS.secondary}
+                        style={{ marginTop: 20 }}
+                    />
                 ) : (
                     <FlatList
                         data={albums}

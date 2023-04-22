@@ -11,6 +11,24 @@ import {
 import React from 'react'
 
 const addAlbum = () => {
+    const [title, setTitle] = useState('')
+    const [description, setDescription] = useState('')
+
+    const createAlbum = async () => {
+        try {
+            const res = await axios.post(
+                `${API_URL}/api/albums/${currentUser.id}`,
+                { headers: { 'Content-Type': 'application/json' } }
+            )
+            setAlbums(res.data.followedAlbums)
+            router.push('/main/home')
+        } catch (error) {
+            console.error(
+                `Error received from axios.post: ${JSON.stringify(error)}`
+            )
+        }
+    }
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.backdrop }}>
             <View
@@ -26,11 +44,13 @@ const addAlbum = () => {
                     style={styles.default}
                     placeholder="Album Title"
                     placeholderTextColor={COLORS.secondary}
+                    onChangeText={setTitle}
                 />
                 <TextInput
                     style={styles.default}
                     placeholder="Description"
                     placeholderTextColor={COLORS.secondary}
+                    onChangeText={setDescription}
                 />
 
                 {/* Create Post Button */}
@@ -54,6 +74,7 @@ const styles = StyleSheet.create({
         width: '100%',
         padding: 10,
         borderRadius: SIZES.sm,
+        color: COLORS.secondary,
     },
     buttonWithIcon: {
         flexDirection: 'row',

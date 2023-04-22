@@ -1,10 +1,31 @@
 import { COLORS, SIZES } from '../constants/theme'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 
+import { API_URL } from '@env'
 import { HeartIcon } from 'react-native-heroicons/solid'
-import React from 'react'
+import axios from 'axios'
 
-const PostCard = () => {
+const PostCard = (props) => {
+    const [likes, setLikes] = useState(0)
+
+    useEffect(() => {
+        fetchLikes()
+    }, [])
+
+    const fetchLikes = async () => {
+        try {
+            const res = await axios.get(
+                `${API_URL}/api/posts/${parseInt(props.post.id, 10)}/likes`
+            )
+            setLikes(res.data)
+        } catch (error) {
+            console.error(
+                `Error received from axios.post: ${JSON.stringify(error)}`
+            )
+        }
+    }
+
     return (
         <View
             style={{
@@ -49,7 +70,7 @@ const PostCard = () => {
                             fontWeight: 'bold',
                         }}
                     >
-                        Post Title
+                        {props.post?.title ?? 'Post Title'}
                     </Text>
                     <Text
                         style={{
@@ -57,7 +78,7 @@ const PostCard = () => {
                             fontSize: SIZES.sm,
                         }}
                     >
-                        Post description
+                        {props.post?.description ?? 'Post Description'}
                     </Text>
                 </View>
                 <View
@@ -68,9 +89,15 @@ const PostCard = () => {
                     }}
                 >
                     <TouchableOpacity>
-                        <HeartIcon size={24} color={COLORS.secondary} />
+                        <HeartIcon
+                            size={24}
+                            color={COLORS.secondary}
+                            style={{ opacity: props.liked ? 1 : 0.2 }}
+                        />
                     </TouchableOpacity>
-                    <Text style={{ color: COLORS.secondary }}>1111</Text>
+                    <Text style={{ color: COLORS.secondary }}>
+                        {likes ?? '1111'}
+                    </Text>
                 </View>
             </View>
         </View>
