@@ -1,30 +1,41 @@
+import { Alert, SafeAreaView, StyleSheet, TextInput, View } from 'react-native'
 import { COLORS, SIZES } from '../../constants/theme'
-import {
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from 'react-native'
+import React, { useContext, useState } from 'react'
 
-import React from 'react'
+import { API_URL } from '@env'
+import FormButton from '../../components/FormButton'
+import { UserContext } from '../_layout'
+import axios from 'axios'
 
 const addAlbum = () => {
+    const { currentUser } = useContext(UserContext)
+
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
+    const [tags, setTags] = useState('')
 
     const createAlbum = async () => {
         try {
-            const res = await axios.post(
-                `${API_URL}/api/albums/${currentUser.id}`,
-                { headers: { 'Content-Type': 'application/json' } }
-            )
-            setAlbums(res.data.followedAlbums)
-            router.push('/main/home')
+            const data = {
+                title,
+                description,
+                tags,
+                ownerId: currentUser.id,
+            }
+
+            const res = await axios.post(`${API_URL}/api/albums/`, data)
+            if (res.status === 201) {
+                Alert.alert(
+                    'Album created sucessfully',
+                    `New album ${res.data.title} was created sucessfully.`,
+                    [{ text: 'OK' }]
+                )
+            }
         } catch (error) {
-            console.error(
-                `Error received from axios.post: ${JSON.stringify(error)}`
+            Alert.alert(
+                'Error occured',
+                `Error received: ${JSON.stringify(error)}`,
+                [{ text: 'OK' }]
             )
         }
     }
@@ -52,16 +63,21 @@ const addAlbum = () => {
                     placeholderTextColor={COLORS.secondary}
                     onChangeText={setDescription}
                 />
-
+                <TextInput
+                    style={styles.default}
+                    placeholder="Tags separated with coma, i.e.: nature,leasure,hiking..."
+                    placeholderTextColor={COLORS.secondary}
+                    onChangeText={(text) => {
+                        const array = text.replace(/\s/g, '').split(',')
+                        setTags(array)
+                    }}
+                />
                 {/* Create Post Button */}
-                <TouchableOpacity
-                    style={[styles.buttonStyle, styles.buttonWithIcon]}
-                    onPress={() => setLocationModalVisible(true)}
-                >
-                    <Text style={[styles.buttonText, { fontSize: SIZES.md }]}>
-                        Add Album
-                    </Text>
-                </TouchableOpacity>
+                <FormButton
+                    text="Add Album"
+                    onPress={() => createAlbum()}
+                    highlighted
+                />
             </View>
         </SafeAreaView>
     )
