@@ -3,6 +3,7 @@ import { TextInput, View } from 'react-native'
 
 import { MagnifyingGlassIcon } from 'react-native-heroicons/solid'
 import React from 'react'
+import { debounce } from 'lodash'
 
 const SearchBar = (props) => {
     return (
@@ -26,7 +27,13 @@ const SearchBar = (props) => {
                     padding: 10,
                     borderRadius: SIZES.sm,
                 }}
-                onChangeText={props.onChange}
+                onChangeText={
+                    props.debounce
+                        ? props.onChange
+                        : (text) => {
+                              debounce(props.onChange(text))
+                          }
+                }
                 placeholder={props.value}
                 placeholderTextColor={COLORS.secondary}
             />

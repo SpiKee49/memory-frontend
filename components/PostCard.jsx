@@ -7,7 +7,8 @@ import { HeartIcon } from 'react-native-heroicons/solid'
 import axios from 'axios'
 
 const PostCard = (props) => {
-    const [likes, setLikes] = useState(0)
+    const [likes, setLikes] = useState(props.liked ? 1 : 0)
+    const [liked, setLiked] = useState(props.liked ?? false)
 
     useEffect(() => {
         fetchLikes()
@@ -88,11 +89,17 @@ const PostCard = (props) => {
                         gap: 5,
                     }}
                 >
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => {
+                            props.onLike(props.post.id)
+                            setLikes(liked ? likes - 1 : likes + 1)
+                            setLiked(!liked)
+                        }}
+                    >
                         <HeartIcon
                             size={24}
                             color={COLORS.secondary}
-                            style={{ opacity: props.liked ? 1 : 0.2 }}
+                            style={{ opacity: liked ? 1 : 0.2 }}
                         />
                     </TouchableOpacity>
                     <Text style={{ color: COLORS.secondary }}>

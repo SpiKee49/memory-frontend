@@ -35,7 +35,7 @@ const Home = () => {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.backdrop }}>
             <View>
-                {albums.length === 0 ? (
+                {!albums || albums.length === 0 ? (
                     <ActivityIndicator
                         size="large"
                         color={COLORS.secondary}

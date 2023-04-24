@@ -17,12 +17,11 @@ import { useSearchParams } from 'expo-router'
 
 const Detail = () => {
     const { id } = useSearchParams()
-    const { currentUser } = useContext(UserContext)
+    const { currentUser, setCurrentUser } = useContext(UserContext)
 
     const [album, setAlbum] = useState(null)
 
     useEffect(() => {
-        console.log(JSON.stringify(currentUser))
         fetchAlbumDetail()
     }, [id])
 
@@ -34,9 +33,21 @@ const Detail = () => {
             )
             setAlbum(res.data)
         } catch (error) {
-            console.error(
-                `Error received from axios.post: ${JSON.stringify(error)}`
+            console.error(`Error received from axios: ${JSON.stringify(error)}`)
+        }
+    }
+
+    const likePost = async (postId) => {
+        try {
+            const res = await axios.put(
+                `${API_URL}/api/users/${currentUser.id}/like`,
+                {
+                    postId,
+                }
             )
+            setCurrentUser({ ...currentUser, ...res.data })
+        } catch (error) {
+            console.error(`Error received from axios: ${JSON.stringify(error)}`)
         }
     }
 
@@ -79,6 +90,7 @@ const Detail = () => {
                                 liked={currentUser.likedPosts
                                     .map((post) => post.id)
                                     .includes(item.id)}
+                                onLike={likePost}
                             />
                         )}
                         keyExtractor={(post) => post.id}
