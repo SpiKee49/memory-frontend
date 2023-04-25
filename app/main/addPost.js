@@ -1,6 +1,7 @@
 import { COLORS, SIZES } from '../../constants/theme'
 import {
     FlatList,
+    Image,
     Modal,
     SafeAreaView,
     StyleSheet,
@@ -16,14 +17,62 @@ import {
 } from 'react-native-heroicons/solid'
 import React, { useState } from 'react'
 
+import AddPhotoModal from '../../components/AddPhotoModal'
 import FormButton from '../../components/FormButton'
 import SearchBar from '../../components/SearchBar'
 
 const addPost = () => {
     const [albumModalVisible, setAlbumModalVisible] = useState(false)
     const [locationModalVisible, setLocationModalVisible] = useState(false)
+    const [image, setImage] = useState(null)
+    const [cameraModal, setCameraModal] = useState(false)
     const [searchAlbum, setSearchAlbum] = useState('')
     const [searchLocation, setSearchLocation] = useState('')
+    const [albums, setAlbums] = useState(null)
+    const [locations, setLocations] = useState(null)
+
+    useEffect(() => {
+        fetchAlbums()
+        fetchLocations()
+    }, [])
+
+    useEffect(() => {
+        fetchAlbums(searchAlbum)
+    }, [searchAlbum])
+
+    useEffect(() => {
+        fetchLocations(searchLocation)
+    }, [searchLocation])
+
+    const fetchAlbums = async (search) => {
+        try {
+            const res = await axios.get(
+                !search
+                    ? `${API_URL}/api/albums`
+                    : `${API_URL}/api/albums?search=${search}`
+            )
+            setAlbums(res.data)
+        } catch (error) {
+            console.error(
+                `Error received from axios.post: ${JSON.stringify(error)}`
+            )
+        }
+    }
+
+    const fetchLocations = async (search) => {
+        try {
+            const res = await axios.get(
+                !search
+                    ? `${API_URL}/api/locations`
+                    : `${API_URL}/api/locations?search=${search}`
+            )
+            setLocations(res.data)
+        } catch (error) {
+            console.error(
+                `Error received from axios.post: ${JSON.stringify(error)}`
+            )
+        }
+    }
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.backdrop }}>
@@ -36,25 +85,50 @@ const addPost = () => {
                     paddingHorizontal: 10,
                 }}
             >
-                <TouchableOpacity
-                    style={{
-                        flex: 0.8,
-                        width: '100%',
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        backgroundColor: COLORS.primaryHover,
-                        borderRadius: SIZES.sm,
-                        gap: 5,
-                    }}
-                >
-                    <PlusCircleIcon size={24} color={COLORS.secondary} />
-                    <Text
-                        style={{ color: COLORS.secondary, fontSize: SIZES.lg }}
+                <AddPhotoModal
+                    visible={cameraModal}
+                    setVisible={setCameraModal}
+                    setImage={setImage}
+                />
+                {image == undefined ? (
+                    <TouchableOpacity
+                        style={{
+                            flex: 0.8,
+                            width: '100%',
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: COLORS.primaryHover,
+                            borderRadius: SIZES.sm,
+                            gap: 5,
+                        }}
+                        onPress={() => setCameraModal(true)}
                     >
-                        Add photo
-                    </Text>
-                </TouchableOpacity>
+                        <PlusCircleIcon size={24} color={COLORS.secondary} />
+                        <Text
+                            style={{
+                                color: COLORS.secondary,
+                                fontSize: SIZES.lg,
+                            }}
+                        >
+                            Add photo
+                        </Text>
+                    </TouchableOpacity>
+                ) : (
+                    <Image
+                        source={{ uri: image }}
+                        style={{
+                            flex: 0.8,
+                            width: '100%',
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: COLORS.primaryHover,
+                            borderRadius: SIZES.sm,
+                            gap: 5,
+                        }}
+                    />
+                )}
                 <TextInput
                     style={styles.default}
                     placeholder="Post Title"
@@ -82,6 +156,7 @@ const addPost = () => {
                             </Text>
                             <SearchBar
                                 onChange={setSearchAlbum}
+                                debounce
                                 value="Search for album"
                             />
                             <View style={styles.modalAlbumList}>
@@ -102,7 +177,7 @@ const addPost = () => {
                                     }}
                                 />
                                 <FlatList
-                                    data={[1, 2, 3, 4, 5]}
+                                    data={album}
                                     renderItem={({ item }) => (
                                         <TouchableOpacity
                                             style={styles.default}

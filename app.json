@@ -1,10 +1,18 @@
 {
-  "expo": {
-    "scheme": "acme",
-    "web": {
-      "bundler": "metro"
-    },
-    "name": "memory-frontend",
-    "slug": "memory-frontend"
-  }
+    "expo": {
+        "scheme": "acme",
+        "web": {
+            "bundler": "metro"
+        },
+        "name": "memory-frontend",
+        "slug": "memory-frontend",
+        "plugins": [
+            [
+                "expo-camera",
+                {
+                    "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+                }
+            ]
+        ]
+    }
 }
