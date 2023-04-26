@@ -8,10 +8,9 @@ import {
 import { COLORS, SIZES } from '../../constants/theme'
 import React, { useEffect, useState } from 'react'
 
-import { API_URL } from '@env'
 import AlbumCard from '../../components/AlbumCard'
 import SearchBar from '../../components/SearchBar'
-import axios from 'axios'
+import { getAlbums } from '../../services/services'
 import { useRouter } from 'expo-router'
 
 const search = () => {
@@ -30,15 +29,11 @@ const search = () => {
 
     const fetchAlbums = async (search) => {
         try {
-            const res = await axios.get(
-                !search
-                    ? `${API_URL}/api/albums`
-                    : `${API_URL}/api/albums?search=${search}`
-            )
+            const res = await getAlbums(search)
             setAlbums(res.data)
         } catch (error) {
             console.error(
-                `Error received from axios.post: ${JSON.stringify(error)}`
+                `Error received from axios.get: ${JSON.stringify(error)}`
             )
         }
     }

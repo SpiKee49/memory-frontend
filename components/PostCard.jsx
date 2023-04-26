@@ -2,9 +2,8 @@ import { COLORS, SIZES } from '../constants/theme'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 
-import { API_URL } from '@env'
 import { HeartIcon } from 'react-native-heroicons/solid'
-import axios from 'axios'
+import { getLikes } from '../services/services'
 
 const PostCard = (props) => {
     const [likes, setLikes] = useState(props.liked ? 1 : 0)
@@ -16,9 +15,7 @@ const PostCard = (props) => {
 
     const fetchLikes = async () => {
         try {
-            const res = await axios.get(
-                `${API_URL}/api/posts/${parseInt(props.post.id, 10)}/likes`
-            )
+            const res = await getLikes(props.post.id)
             setLikes(res.data)
         } catch (error) {
             console.error(

@@ -17,6 +17,7 @@ import {
 } from 'react-native-heroicons/solid'
 import MapView, { Marker } from 'react-native-maps'
 import React, { useEffect, useState } from 'react'
+import { getAlbums, getLocs } from '../../services/services'
 
 import { API_URL } from '@env'
 import AddPhotoModal from '../../components/AddPhotoModal'
@@ -49,11 +50,7 @@ const addPost = () => {
 
     const fetchAlbums = async (search) => {
         try {
-            const res = await axios.get(
-                !search
-                    ? `${API_URL}/api/albums`
-                    : `${API_URL}/api/albums?search=${search}`
-            )
+            const res = await getAlbums(search)
             setAlbums(res.data)
         } catch (error) {
             console.error(
@@ -64,11 +61,7 @@ const addPost = () => {
 
     const fetchLocations = async (search) => {
         try {
-            const res = await axios.get(
-                !search
-                    ? `${API_URL}/api/locations`
-                    : `${API_URL}/api/locations?search=${search}`
-            )
+            const res = await getLocs(search)
             setLocations(res.data)
         } catch (error) {
             console.error(

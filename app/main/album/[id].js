@@ -8,11 +8,10 @@ import {
 } from 'react-native'
 import { COLORS, SIZES } from '../../../constants/theme'
 import React, { useContext, useEffect, useState } from 'react'
+import { getAlbumDetail, likePost } from '../../../services/services'
 
-import { API_URL } from '@env'
 import PostCard from '../../../components/PostCard'
 import { UserContext } from '../../_layout'
-import axios from 'axios'
 import { useSearchParams } from 'expo-router'
 
 const Detail = () => {
@@ -28,23 +27,16 @@ const Detail = () => {
     const fetchAlbumDetail = async () => {
         if (id == null) return
         try {
-            const res = await axios.get(
-                `${API_URL}/api/albums/${parseInt(id, 10)}`
-            )
+            const res = await getAlbumDetail(id)
             setAlbum(res.data)
         } catch (error) {
             console.error(`Error received from axios: ${JSON.stringify(error)}`)
         }
     }
 
-    const likePost = async (postId) => {
+    const addLike = async (postId) => {
         try {
-            const res = await axios.put(
-                `${API_URL}/api/users/${currentUser.id}/like`,
-                {
-                    postId,
-                }
-            )
+            const res = await likePost(currentUser.id, postId)
             setCurrentUser({ ...currentUser, ...res.data })
         } catch (error) {
             console.error(`Error received from axios: ${JSON.stringify(error)}`)
@@ -90,7 +82,7 @@ const Detail = () => {
                                 liked={currentUser.likedPosts
                                     .map((post) => post.id)
                                     .includes(item.id)}
-                                onLike={likePost}
+                                onLike={addLike}
                             />
                         )}
                         keyExtractor={(post) => post.id}

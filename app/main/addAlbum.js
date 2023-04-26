@@ -2,10 +2,9 @@ import { Alert, SafeAreaView, StyleSheet, TextInput, View } from 'react-native'
 import { COLORS, SIZES } from '../../constants/theme'
 import React, { useContext, useState } from 'react'
 
-import { API_URL } from '@env'
 import FormButton from '../../components/FormButton'
 import { UserContext } from '../_layout'
-import axios from 'axios'
+import { createAlbum } from '../../services/services'
 
 const addAlbum = () => {
     const { currentUser } = useContext(UserContext)
@@ -14,7 +13,7 @@ const addAlbum = () => {
     const [description, setDescription] = useState('')
     const [tags, setTags] = useState('')
 
-    const createAlbum = async () => {
+    const sendAlbum = async () => {
         try {
             const data = {
                 title,
@@ -23,7 +22,7 @@ const addAlbum = () => {
                 ownerId: currentUser.id,
             }
 
-            const res = await axios.post(`${API_URL}/api/albums/`, data)
+            const res = await createAlbum(data)
             if (res.status === 201) {
                 Alert.alert(
                     'Album created sucessfully',
@@ -75,7 +74,7 @@ const addAlbum = () => {
                 {/* Create Post Button */}
                 <FormButton
                     text="Add Album"
-                    onPress={() => createAlbum()}
+                    onPress={() => sendAlbum()}
                     highlighted
                 />
             </View>
