@@ -15,11 +15,14 @@ import {
     GlobeAltIcon,
     PlusCircleIcon,
 } from 'react-native-heroicons/solid'
-import React, { useState } from 'react'
+import MapView, { Marker } from 'react-native-maps'
+import React, { useEffect, useState } from 'react'
 
+import { API_URL } from '@env'
 import AddPhotoModal from '../../components/AddPhotoModal'
 import FormButton from '../../components/FormButton'
 import SearchBar from '../../components/SearchBar'
+import axios from 'axios'
 
 const addPost = () => {
     const [albumModalVisible, setAlbumModalVisible] = useState(false)
@@ -28,8 +31,8 @@ const addPost = () => {
     const [cameraModal, setCameraModal] = useState(false)
     const [searchAlbum, setSearchAlbum] = useState('')
     const [searchLocation, setSearchLocation] = useState('')
-    const [albums, setAlbums] = useState(null)
-    const [locations, setLocations] = useState(null)
+    const [albums, setAlbums] = useState([])
+    const [locations, setLocations] = useState([])
 
     useEffect(() => {
         fetchAlbums()
@@ -54,7 +57,7 @@ const addPost = () => {
             setAlbums(res.data)
         } catch (error) {
             console.error(
-                `Error received from axios.post: ${JSON.stringify(error)}`
+                `Error received from axios.get: ${JSON.stringify(error)}`
             )
         }
     }
@@ -69,7 +72,7 @@ const addPost = () => {
             setLocations(res.data)
         } catch (error) {
             console.error(
-                `Error received from axios.post: ${JSON.stringify(error)}`
+                `Error received from axios.get: ${JSON.stringify(error)}`
             )
         }
     }
@@ -177,17 +180,17 @@ const addPost = () => {
                                     }}
                                 />
                                 <FlatList
-                                    data={album}
+                                    data={albums}
                                     renderItem={({ item }) => (
                                         <TouchableOpacity
                                             style={styles.default}
                                         >
                                             <Text style={styles.textStyle}>
-                                                Tasty Album {item}
+                                                {item.title}
                                             </Text>
                                         </TouchableOpacity>
                                     )}
-                                    keyExtractor={(item) => item}
+                                    keyExtractor={(item) => item.id}
                                 />
                             </View>
                             <FormButton
@@ -223,6 +226,7 @@ const addPost = () => {
                             <SearchBar
                                 onChange={setSearchLocation}
                                 value="Search for location"
+                                debounce
                             />
                             <View style={styles.modalAlbumList}>
                                 <Text
@@ -242,19 +246,57 @@ const addPost = () => {
                                     }}
                                 />
                                 <FlatList
-                                    data={[1, 2, 3, 4, 5]}
+                                    data={locations}
                                     renderItem={({ item }) => (
                                         <TouchableOpacity
                                             style={styles.default}
                                         >
                                             <Text style={styles.textStyle}>
-                                                Tasty Location {item}
+                                                {item.name}
                                             </Text>
                                         </TouchableOpacity>
                                     )}
-                                    keyExtractor={(item) => item}
+                                    keyExtractor={(item) => item.id}
                                 />
                             </View>
+                            <View
+                                style={{
+                                    flex: 1,
+                                    width: '100%',
+                                    height: '100%',
+                                    marginTop: 10,
+                                }}
+                            >
+                                <MapView
+                                    initialRegion={{
+                                        latitude: 48.15345504232036,
+                                        longitude: 17.071571441913836,
+                                        latitudeDelta: 0.0922,
+                                        longitudeDelta: 0.0421,
+                                    }}
+                                    userInterfaceStyle={'dark'}
+                                    style={{ flex: 1 }}
+                                >
+                                    {locations.length > 0 &&
+                                        locations.map((loc, index) => {
+                                            return (
+                                                <Marker
+                                                    key={index}
+                                                    title={loc.name}
+                                                    coordinate={{
+                                                        latitude: Number(
+                                                            loc.longitude
+                                                        ),
+                                                        longitude: Number(
+                                                            loc.latitude
+                                                        ),
+                                                    }}
+                                                />
+                                            )
+                                        })}
+                                </MapView>
+                            </View>
+
                             <FormButton
                                 onPress={() =>
                                     setLocationModalVisible(
@@ -321,6 +363,10 @@ const styles = StyleSheet.create({
     },
     modalAlbumList: {
         width: '100%',
+    },
+    textStyle: {
+        color: COLORS.secondary,
+        textAlign: 'center',
     },
 })
 

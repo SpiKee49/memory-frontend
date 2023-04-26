@@ -2,10 +2,11 @@ import { COLORS, SIZES } from '../constants/theme'
 import { TextInput, View } from 'react-native'
 
 import { MagnifyingGlassIcon } from 'react-native-heroicons/solid'
+import PropTypes from 'prop-types'
 import React from 'react'
 import { debounce } from 'lodash'
 
-const SearchBar = (props) => {
+function SearchBar(props) {
     return (
         <View
             style={{
@@ -39,6 +40,11 @@ const SearchBar = (props) => {
             />
         </View>
     )
+}
+
+SearchBar.propsType = {
+    debounce: PropTypes.boolean,
+    onChange: PropTypes.func.isRequired,
 }
 
 export default SearchBar
