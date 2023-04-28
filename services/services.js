@@ -44,6 +44,9 @@ export function createAlbum(data) {
 export function getLocs(search) {
     return client.get(!search ? 'locations' : `locations?search=${search}`)
 }
+export function postAddLocation(location) {
+    return client.post('locations', location)
+}
 
 //Posts
 
