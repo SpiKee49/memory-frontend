@@ -6,8 +6,8 @@ import {
     UserGroupIcon,
 } from 'react-native-heroicons/solid'
 
-import { BottomTabBar } from '@react-navigation/bottom-tabs'
 import { COLORS } from '../../constants/theme'
+import React from 'react'
 import { Tabs } from 'expo-router'
 
 const Layout = () => {

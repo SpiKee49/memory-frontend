@@ -51,6 +51,8 @@ const Login = () => {
                 setCurrentUser(user.data)
                 setIsLoading(false)
                 router.push('/main/home')
+                setUsername('')
+                setPassword('')
             }
         } catch (error) {
             console.error(error)

@@ -40,7 +40,6 @@ async function logout() {
     try {
         await AsyncStorage.removeItem('@accessToken')
         await AsyncStorage.removeItem('@refreshToken')
-        useRouter().push('/login')
     } catch (e) {
         console.error(e)
     }

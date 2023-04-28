@@ -11,10 +11,11 @@ import { Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 
 function FriendCard(props) {
-    const { type } = props
+    const { type, data: user, onFunction } = props
     const isFriend = type === 'friend'
     const isRequest = type === 'request'
     const isSuggestion = type === 'suggestion'
+
     return (
         <View
             style={{
@@ -50,31 +51,37 @@ function FriendCard(props) {
                             fontWeight: 'bold',
                         }}
                     >
-                        {isFriend ? "Friend's name" : 'Profile name'}
+                        {user.profileName ?? 'Profile name'}
                     </Text>
                 </View>
                 {isFriend && (
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={onFunction}>
                         <UserMinusIcon size={24} color={COLORS.alert} />
                     </TouchableOpacity>
                 )}
                 {isRequest && (
                     <View>
-                        <TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => props.handler(user.reqId, true)}
+                        >
                             <CheckCircleIcon
                                 size={24}
                                 color={COLORS.secondary}
                             />
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => props.handler(user.reqId, false)}
+                        >
                             <XCircleIcon size={24} color={COLORS.alert} />
                         </TouchableOpacity>
                     </View>
                 )}
-                {isSuggestion && (
-                    <TouchableOpacity>
+                {isSuggestion && !props.pending ? (
+                    <TouchableOpacity onPress={onFunction}>
                         <UserPlusIcon size={24} color={COLORS.secondary} />
                     </TouchableOpacity>
+                ) : (
+                    isSuggestion && props.pending && <Text>Pending</Text>
                 )}
             </View>
         </View>

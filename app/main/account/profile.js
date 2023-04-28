@@ -2,12 +2,15 @@ import { COLORS, SIZES } from '../../../constants/theme'
 import { Modal, StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useState } from 'react'
 
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import FormButton from '../../../components/FormButton'
 import { SafeAreaView } from 'react-native'
 import { UserCircleIcon } from 'react-native-heroicons/solid'
 import { UserContext } from '../../_layout'
+import { useRouter } from 'expo-router'
 
 const profile = () => {
+    const router = useRouter()
     const { currentUser, setCurrentUser } = React.useContext(UserContext)
     const [nameModalVisible, setNameModalVisible] = useState(false)
     const [emailModalVisible, setEmailModalVisible] = useState(false)
@@ -15,6 +18,15 @@ const profile = () => {
     const [profileName, setProfileName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+
+    const logOut = async () => {
+        await AsyncStorage.removeItem('@accessToken')
+        await AsyncStorage.removeItem('@refreshToken')
+        await AsyncStorage.removeItem('@username')
+        router.push('/login')
+        setCurrentUser(null)
+    }
+
     return (
         <SafeAreaView
             style={{ flex: 1, backgroundColor: COLORS.backdrop, gap: 20 }}
@@ -190,7 +202,7 @@ const profile = () => {
                     text={'Change Password'}
                 />
             </View>
-            <FormButton onPress={() => {}} text={'Log out'} highlighted />
+            <FormButton onPress={() => logOut()} text={'Log out'} highlighted />
         </SafeAreaView>
     )
 }

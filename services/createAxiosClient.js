@@ -58,13 +58,6 @@ export function createAxiosClient({
                 logout()
                 return Promise.reject(error)
             }
-            console.log({
-                refreshToken,
-                status: error.response?.status,
-                message: error.response.data.message,
-                origninalRequest: originalRequest?.url !== refreshTokenUrl,
-                retry: originalRequest?._retry !== true,
-            })
             // Refresh token conditions
             if (
                 refreshToken &&
@@ -91,17 +84,11 @@ export function createAxiosClient({
                         refreshToken: refreshToken,
                     })
                     .then(async (res) => {
-                        const accessToken = await getCurrentAccessToken()
-                        console.log('before', accessToken, refreshToken)
                         const tokens = {
                             accessToken: res.data?.accessToken,
                             refreshToken: res.data?.refreshToken,
                         }
-                        console.log(
-                            'after',
-                            tokens.accessToken,
-                            tokens.refreshToken
-                        )
+
                         await setRefreshedTokens(tokens)
                         processQueue(null)
 

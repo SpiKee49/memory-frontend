@@ -1,18 +1,24 @@
 {
-    "expo": {
-        "scheme": "acme",
-        "web": {
-            "bundler": "metro"
-        },
-        "name": "memory-frontend",
-        "slug": "memory-frontend",
-        "plugins": [
-            [
-                "expo-camera",
-                {
-                    "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
-                }
-            ]
-        ]
-    }
+  "expo": {
+    "scheme": "acme",
+    "web": {
+      "bundler": "metro"
+    },
+    "name": "memory-frontend",
+    "slug": "memory",
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "fafe2249-e7e0-4969-98ba-30d44009646d"
+      }
+    },
+    "owner": "spikee"
+  }
 }

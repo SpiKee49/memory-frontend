@@ -15,13 +15,22 @@ export function login({ username, password }) {
         { authorization: false }
     )
 }
-
+//Users
 export function getProfile(username) {
     return client.get(`users/${username}`)
 }
+
+export function removeFriend(id, friendId) {
+    return client.put(`users/friends/remove`, { id, friendId })
+}
+
+export function getAllUsers(search) {
+    return client.get(!search ? `users` : `users?search=${search}`)
+}
+
 //Albums
 export function getAlbums(search) {
-    return client.get(!search ? 'albums' : `'albums?search=${search}`)
+    return client.get(!search ? 'albums' : `albums?search=${search}`)
 }
 
 export function getAlbumDetail(id) {
@@ -33,7 +42,7 @@ export function createAlbum(data) {
 
 //Locations
 export function getLocs(search) {
-    return client.get(!search ? 'locations' : `'locations?search=${search}`)
+    return client.get(!search ? 'locations' : `locations?search=${search}`)
 }
 
 //Posts
@@ -42,11 +51,23 @@ export function getLikes(id) {
 }
 
 export function likePost(userId, postId) {
-    return client.put(
-        `users/${userId}/like`,
-        {
-            postId,
-        },
-        { authorization: true }
-    )
+    return client.put(`users/${userId}/like`, {
+        postId,
+    })
+}
+
+//Friend requests
+export function getFriendRequests(type, userId) {
+    return client.get(`requests/${type}/${userId}`)
+}
+
+export function getAllFriends(userId) {
+    return client.get(`users/${userId}/friends`)
+}
+
+export function sendFriendRequest(fromId, toId) {
+    return client.post(`requests/send`, { fromId, toId })
+}
+export function handleFriendRequest(requestId, status) {
+    return client.post(`requests/handle`, { id: requestId, status })
 }

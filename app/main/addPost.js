@@ -221,7 +221,11 @@ const addPost = () => {
                                 value="Search for location"
                                 debounce
                             />
-                            <View style={styles.modalAlbumList}>
+                            <View
+                                style={
+                                    (styles.modalAlbumList, { maxHeight: 250 })
+                                }
+                            >
                                 <Text
                                     style={[
                                         styles.modalText,
