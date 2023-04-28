@@ -1,9 +1,10 @@
 import { Alert, SafeAreaView, StyleSheet, TextInput, View } from 'react-native'
 import { COLORS, SIZES } from '../../constants/theme'
+import { NetworkContext, UserContext } from '../_layout'
 import React, { useContext, useState } from 'react'
 
 import FormButton from '../../components/FormButton'
-import { UserContext } from '../_layout'
+import NoInternet from '../../components/NoInternet'
 import { createAlbum } from '../../services/services'
 
 const addAlbum = () => {
@@ -12,6 +13,7 @@ const addAlbum = () => {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [tags, setTags] = useState('')
+    const { internetAccess } = useContext(NetworkContext)
 
     const sendAlbum = async () => {
         try {
@@ -37,6 +39,9 @@ const addAlbum = () => {
                 [{ text: 'OK' }]
             )
         }
+    }
+    if (!internetAccess) {
+        return <NoInternet />
     }
 
     return (

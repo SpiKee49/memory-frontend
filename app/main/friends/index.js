@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native'
+import { NetworkContext, UserContext } from '../../_layout'
 import React, { useContext, useEffect, useState } from 'react'
 import {
     getAllFriends,
@@ -18,8 +19,8 @@ import {
 } from '../../../services/services'
 
 import FriendCard from '../../../components/FriendCard'
+import NoInternet from '../../../components/NoInternet'
 import SearchBar from '../../../components/SearchBar'
-import { UserContext } from '../../_layout'
 
 const friends = () => {
     const { currentUser } = useContext(UserContext)
@@ -29,18 +30,21 @@ const friends = () => {
     const [friends, setFriends] = useState()
     const [friendRequests, setFriendRequests] = useState()
     const [sentFriendRequests, setSentFriendRequests] = useState()
+    const { internetAccess } = useContext(NetworkContext)
 
     useEffect(() => {
-        ;(async () => {
-            await fetchaAllFriends()
-            await fetchAllRequests()
-            await fetchAllSentRequests()
-            await fetchSuggestedUsers()
-        })()
+        if (internetAccess) {
+            ;(async () => {
+                await fetchaAllFriends()
+                await fetchAllRequests()
+                await fetchAllSentRequests()
+                await fetchSuggestedUsers()
+            })()
+        }
     }, [])
 
     useEffect(() => {
-        fetchSuggestedUsers(searchValue)
+        if (internetAccess) fetchSuggestedUsers(searchValue)
     }, [searchValue])
 
     const fetchaAllFriends = async () => {
@@ -138,6 +142,9 @@ const friends = () => {
         }
     }
 
+    if (!internetAccess) {
+        return <NoInternet />
+    }
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.backdrop }}>
             {!isFriendList && (

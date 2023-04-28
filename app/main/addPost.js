@@ -16,16 +16,17 @@ import {
     PlusCircleIcon,
 } from 'react-native-heroicons/solid'
 import MapView, { Marker } from 'react-native-maps'
-import React, { useEffect, useState } from 'react'
-import { getAlbums, getLocs } from '../../services/services'
+import { NetworkContext, UserContext } from '../_layout'
+import React, { useContext, useEffect, useState } from 'react'
+import { getAlbums, getLocs, postAddPost } from '../../services/services'
 
-import { API_URL } from '@env'
 import AddPhotoModal from '../../components/AddPhotoModal'
 import FormButton from '../../components/FormButton'
+import NoInternet from '../../components/NoInternet'
 import SearchBar from '../../components/SearchBar'
-import axios from 'axios'
 
 const addPost = () => {
+    const { currentUser } = useContext(UserContext)
     const [albumModalVisible, setAlbumModalVisible] = useState(false)
     const [locationModalVisible, setLocationModalVisible] = useState(false)
     const [image, setImage] = useState(null)
@@ -34,18 +35,27 @@ const addPost = () => {
     const [searchLocation, setSearchLocation] = useState('')
     const [albums, setAlbums] = useState([])
     const [locations, setLocations] = useState([])
+    const { internetAccess } = useContext(NetworkContext)
+
+    //form state
+    const [albumId, setAlbumId] = useState()
+    const [locationId, setLocation] = useState()
+    const [title, setTitle] = useState()
+    const [description, setDescription] = useState()
 
     useEffect(() => {
-        fetchAlbums()
-        fetchLocations()
+        if (internetAccess) {
+            fetchAlbums()
+            fetchLocations()
+        }
     }, [])
 
     useEffect(() => {
-        fetchAlbums(searchAlbum)
+        if (internetAccess) fetchAlbums(searchAlbum)
     }, [searchAlbum])
 
     useEffect(() => {
-        fetchLocations(searchLocation)
+        if (internetAccess) fetchLocations(searchLocation)
     }, [searchLocation])
 
     const fetchAlbums = async (search) => {
@@ -68,6 +78,27 @@ const addPost = () => {
                 `Error received from axios.get: ${JSON.stringify(error)}`
             )
         }
+    }
+
+    const sendPostForm = async () => {
+        try {
+            const res = await postAddPost({
+                title,
+                description,
+                albumId,
+                locationId,
+                userId: currentUser.id,
+            })
+            setAlbums(res.data)
+        } catch (error) {
+            console.error(
+                `Error received from axios.get: ${JSON.stringify(error)}`
+            )
+        }
+    }
+
+    if (!internetAccess) {
+        return <NoInternet />
     }
 
     return (
@@ -129,11 +160,13 @@ const addPost = () => {
                     style={styles.default}
                     placeholder="Post Title"
                     placeholderTextColor={COLORS.secondary}
+                    onChangeText={setTitle}
                 />
                 <TextInput
                     style={styles.default}
                     placeholder="Description"
                     placeholderTextColor={COLORS.secondary}
+                    onChangeText={setDescription}
                 />
 
                 {/* Select Album Modal */}
@@ -177,6 +210,10 @@ const addPost = () => {
                                     renderItem={({ item }) => (
                                         <TouchableOpacity
                                             style={styles.default}
+                                            onPress={() => {
+                                                setAlbumId(item.id)
+                                                setAlbumModalVisible(false)
+                                            }}
                                         >
                                             <Text style={styles.textStyle}>
                                                 {item.title}
@@ -247,6 +284,10 @@ const addPost = () => {
                                     renderItem={({ item }) => (
                                         <TouchableOpacity
                                             style={styles.default}
+                                            onPress={() => {
+                                                setLocation(item.id)
+                                                setLocationModalVisible(false)
+                                            }}
                                         >
                                             <Text style={styles.textStyle}>
                                                 {item.name}
@@ -314,7 +355,7 @@ const addPost = () => {
 
                 {/* Create Post Button */}
                 <FormButton
-                    onPress={() => setLocationModalVisible(true)}
+                    onPress={() => sendPostForm()}
                     text={'Add post'}
                     highlighted
                 />

@@ -7,21 +7,23 @@ import {
     View,
 } from 'react-native'
 import { COLORS, SIZES } from '../../../constants/theme'
+import { NetworkContext, UserContext } from '../../_layout'
 import React, { useContext, useEffect, useState } from 'react'
 import { getAlbumDetail, likePost } from '../../../services/services'
 
+import NoInternet from '../../../components/NoInternet'
 import PostCard from '../../../components/PostCard'
-import { UserContext } from '../../_layout'
 import { useSearchParams } from 'expo-router'
 
 const Detail = () => {
     const { id } = useSearchParams()
     const { currentUser, setCurrentUser } = useContext(UserContext)
+    const { internetAccess } = useContext(NetworkContext)
 
     const [album, setAlbum] = useState(null)
 
     useEffect(() => {
-        fetchAlbumDetail()
+        if (internetAccess) fetchAlbumDetail()
     }, [id])
 
     const fetchAlbumDetail = async () => {
@@ -41,6 +43,10 @@ const Detail = () => {
         } catch (error) {
             console.error(`Error received from axios: ${JSON.stringify(error)}`)
         }
+    }
+
+    if (!internetAccess) {
+        return <NoInternet />
     }
 
     return (

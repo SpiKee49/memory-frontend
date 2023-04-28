@@ -1,5 +1,5 @@
 Arguments: 
-  C:\Users\René\AppData\Local\Volta\tools\image\node\16.13.1\node.exe C:\Users\René\node_modules\yarn\bin\yarn.js add expo-device@~5.2.1
+  C:\Users\René\AppData\Local\Volta\tools\image\node\16.13.1\node.exe C:\Users\René\node_modules\yarn\bin\yarn.js add expo-network@~5.2.1
 
 PATH: 
   C:\Users\René\Desktop\Dokumenty\FIIT\6semester\MTAA\Frontend\memory-frontend\node_modules\.bin;C:\Users\René\Desktop\Dokumenty\FIIT\6semester\MTAA\Frontend\memory-frontend\node_modules\.bin;C:\Users\René\Desktop\Dokumenty\FIIT\6semester\MTAA\Frontend\node_modules\.bin;C:\Users\René\Desktop\Dokumenty\FIIT\6semester\MTAA\node_modules\.bin;C:\Users\René\Desktop\Dokumenty\FIIT\6semester\node_modules\.bin;C:\Users\René\Desktop\Dokumenty\FIIT\node_modules\.bin;C:\Users\René\Desktop\Dokumenty\node_modules\.bin;C:\Users\René\Desktop\node_modules\.bin;C:\Users\René\node_modules\.bin;C:\Users\node_modules\.bin;C:\node_modules\.bin;C:\Users\René\AppData\Local\Volta\tools\image\npm\8.19.4\node_modules\@npmcli\run-script\lib\node-gyp-bin;C:\Users\René\AppData\Local\Volta\tools\image\npm\8.19.4\bin;C:\Users\René\AppData\Local\Volta\tools\image\yarn\4.0.0-rc.36\bin;C:\Users\René\AppData\Local\Volta\tools\image\node\16.13.1;C:\Users\René\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\local\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\René\bin;C:\Program Files\Volta;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\JDKs\bin;C:\Program Files\Git\cmd;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Windows\System32;C:\WINDOWS\System32\OpenSSH;C:\Program Files\PuTTY;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\nodejs;C:\Program Files (x86)\eID_klient;C:\Users\René\AppData\Local\Volta\bin;C:\Users\René\AppData\Local\Programs\Python\Python310\Scripts;C:\Users\René\AppData\Local\Programs\Python\Python310;C:\Users\René\AppData\Local\Microsoft\WindowsApps;C:\Users\René\AppData\Local\Microsoft\WindowsApps;C:\Users\René\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\René\AppData\Local\Programs\MiKTeX\miktex\bin\x64;D:\Users\René\Desktop\Odkazy\cmder\vendor\git-for-windows\mingw64\bin;C:\Program Files\Git\git-bash.exe;C:\opt\windows_64\bin;C:\Users\René\AppData\Local\GitHubDesktop\bin;C:\Users\René\AppData\Roaming\npm;C:\Program Files\mitmproxy\bin;C:\Program Files\JetBrains\CLion 2022.3.2\bin;D:\flutter\bin;C:\Program Files\PostgreSQL\15\bin;C:\AndroidStudio\Android\Sdk\platform-tools;C:\ngrok;C:\Program Files\Git\usr\bin\vendor_perl;C:\Program Files\Git\usr\bin\core_perl
@@ -31,6 +31,7 @@ npm manifest:
       "expo": "^48.0.11",
       "expo-camera": "^13.2.1",
       "expo-constants": "~14.2.1",
+      "expo-device": "~5.2.1",
       "expo-font": "^11.1.1",
       "expo-linking": "~4.0.1",
       "expo-notifications": "~0.18.1",
@@ -3721,6 +3722,13 @@ Lockfile:
     dependencies:
       "@expo/config" "~8.0.0"
       uuid "^3.3.2"
+  
+  expo-device@~5.2.1:
+    version "5.2.1"
+    resolved "https://registry.yarnpkg.com/expo-device/-/expo-device-5.2.1.tgz#2962abdb9682e5b991a82836667f2e7d7103d9ef"
+    integrity sha512-ZWGph+fGQPxo9v2e0YygPb45Hl+ZR3mh4tpLY5AOYK/sNjQy+Lu3T/sLGIdi2TOcYNL2oZwzZ6eGvwVYmdIfLg==
+    dependencies:
+      ua-parser-js "^0.7.33"
   
   expo-file-system@~15.2.0, expo-file-system@~15.2.2:
     version "15.2.2"
@@ -7806,7 +7814,7 @@ Lockfile:
       for-each "^0.3.3"
       is-typed-array "^1.1.9"
   
-  ua-parser-js@^0.7.30:
+  ua-parser-js@^0.7.30, ua-parser-js@^0.7.33:
     version "0.7.35"
     resolved "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-0.7.35.tgz"
     integrity sha512-veRf7dawaj9xaWEu9HoTVn5Pggtc/qj+kqTOFvNiN1l0YdxwC1kvel57UCjThjGa3BHBihE8/UJAHI+uQHmd/g==

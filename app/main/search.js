@@ -6,9 +6,11 @@ import {
     View,
 } from 'react-native'
 import { COLORS, SIZES } from '../../constants/theme'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import AlbumCard from '../../components/AlbumCard'
+import { NetworkContext } from '../_layout'
+import NoInternet from '../../components/NoInternet'
 import SearchBar from '../../components/SearchBar'
 import { getAlbums } from '../../services/services'
 import { useRouter } from 'expo-router'
@@ -18,15 +20,19 @@ const search = () => {
     const router = useRouter()
 
     const [albums, setAlbums] = useState()
+    const { internetAccess } = useContext(NetworkContext)
 
     useEffect(() => {
-        fetchAlbums()
+        if (internetAccess) fetchAlbums()
     }, [])
 
     useEffect(() => {
-        fetchAlbums(searchValue)
+        if (internetAccess) fetchAlbums(searchValue)
     }, [searchValue])
 
+    if (!internetAccess) {
+        return <NoInternet />
+    }
     const fetchAlbums = async (search) => {
         try {
             const res = await getAlbums(search)
@@ -56,6 +62,7 @@ const search = () => {
                     {albums.length === 0 ? (
                         <View
                             style={{
+                                flex: 1,
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 marginBottom: 40,

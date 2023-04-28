@@ -46,6 +46,10 @@ export function getLocs(search) {
 }
 
 //Posts
+
+export function postAddPost(post) {
+    return client.post(`posts/`, post)
+}
 export function getLikes(id) {
     return client.get(`posts/${parseInt(id, 10)}/likes`)
 }
@@ -70,4 +74,9 @@ export function sendFriendRequest(fromId, toId) {
 }
 export function handleFriendRequest(requestId, status) {
     return client.post(`requests/handle`, { id: requestId, status })
+}
+
+// Tokens
+export function postPushToken(token) {
+    return client.post(`tokens/add`, { token })
 }

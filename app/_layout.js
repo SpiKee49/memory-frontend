@@ -1,4 +1,5 @@
 import * as Device from 'expo-device'
+import * as Network from 'expo-network'
 import * as Notifications from 'expo-notifications'
 
 import { COLORS, SIZES } from '../constants/theme'
@@ -6,12 +7,17 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Stack, useRouter } from 'expo-router'
 import { Text, TouchableOpacity } from 'react-native'
 
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { UserCircleIcon } from 'react-native-heroicons/solid'
-import axios from 'axios'
+import { postPushToken } from '../services/services'
 
 export const UserContext = React.createContext({
     user: null,
     setUser: () => {},
+})
+export const NetworkContext = React.createContext({
+    internetAccess: true,
+    setNetworkStatus: () => {},
 })
 
 Notifications.setNotificationHandler({
@@ -25,23 +31,28 @@ Notifications.setNotificationHandler({
 async function registerForPushNotificationsAsync() {
     let token
     if (Device.isDevice) {
-        const { status: existingStatus } =
-            await Notifications.getPermissionsAsync()
-        let finalStatus = existingStatus
-        if (existingStatus !== 'granted') {
-            const { status } = await Notifications.requestPermissionsAsync()
-            finalStatus = status
+        try {
+            const { status: existingStatus } =
+                await Notifications.getPermissionsAsync()
+            let finalStatus = existingStatus
+            if (existingStatus !== 'granted') {
+                const { status } = await Notifications.requestPermissionsAsync()
+                finalStatus = status
+            }
+            if (finalStatus !== 'granted') {
+                alert('Failed to get push token for push notification!')
+                return
+            }
+            token = (
+                await Notifications.getExpoPushTokenAsync({
+                    projectId: 'fafe2249-e7e0-4969-98ba-30d44009646d',
+                })
+            ).data
+            console.log(token)
+            await postPushToken(token)
+        } catch (error) {
+            console.error(error)
         }
-        if (finalStatus !== 'granted') {
-            alert('Failed to get push token for push notification!')
-            return
-        }
-        token = (
-            await Notifications.getExpoPushTokenAsync({
-                projectId: 'fafe2249-e7e0-4969-98ba-30d44009646d',
-            })
-        ).data
-        console.log(token)
     } else {
         alert('Must use physical device for Push Notifications')
     }
@@ -61,11 +72,14 @@ async function registerForPushNotificationsAsync() {
 const Layout = () => {
     const router = useRouter()
     const [currentUser, setCurrentUser] = useState(null)
+    const [internetAccess, setInternetAccess] = useState(true)
     const [expoPushToken, setExpoPushToken] = useState('')
     const [notification, setNotification] = useState(false)
     const notificationListener = useRef()
     const responseListener = useRef()
     useEffect(() => {
+        checkConnection()
+
         registerForPushNotificationsAsync().then((token) => {
             return setExpoPushToken(token)
         })
@@ -91,45 +105,69 @@ const Layout = () => {
             )
         }
     }, [])
+
+    useEffect(() => {
+        ;(async () =>
+            await AsyncStorage.setItem(
+                '@userData',
+                JSON.stringify(currentUser)
+            ))()
+    }, [currentUser])
+
+    const checkConnection = (interval) => {
+        setInterval(
+            async () => {
+                const network = await Network.getNetworkStateAsync()
+                if (internetAccess !== network.isInternetReachable) {
+                    setInternetAccess(network.isInternetReachable)
+                }
+            },
+            interval ? interval * 1000 : 5000
+        )
+    }
+
     return (
         <UserContext.Provider value={{ currentUser, setCurrentUser }}>
-            <Text>Your expo push token: {expoPushToken}</Text>
-            <Stack
-                screenOptions={{
-                    headerShown: true,
-                    headerStyle: {
-                        backgroundColor: COLORS.primary,
-                    },
-                    headerShadowVisible: true,
-                    headerLeft: () => (
-                        <TouchableOpacity
-                            style={{
-                                paddingHorizontal: 10,
-                            }}
-                            onPress={() => router.push('/main/home')}
-                        >
-                            <Text
+            <NetworkContext.Provider
+                value={{ internetAccess, setInternetAccess }}
+            >
+                <Stack
+                    screenOptions={{
+                        headerShown: true,
+                        headerStyle: {
+                            backgroundColor: COLORS.primary,
+                        },
+                        headerShadowVisible: true,
+                        headerLeft: () => (
+                            <TouchableOpacity
                                 style={{
-                                    color: '#fff',
-                                    fontSize: SIZES.xl,
-                                    fontWeight: 'bold',
+                                    paddingHorizontal: 10,
                                 }}
+                                onPress={() => router.push('/main/home')}
                             >
-                                Memory
-                            </Text>
-                        </TouchableOpacity>
-                    ),
-                    headerRight: () => (
-                        <TouchableOpacity
-                            style={{ paddingHorizontal: 10 }}
-                            onPress={() => router.push('/main/account')}
-                        >
-                            <UserCircleIcon color={'white'} size={28} />
-                        </TouchableOpacity>
-                    ),
-                    headerTitle: '',
-                }}
-            />
+                                <Text
+                                    style={{
+                                        color: '#fff',
+                                        fontSize: SIZES.xl,
+                                        fontWeight: 'bold',
+                                    }}
+                                >
+                                    Memory
+                                </Text>
+                            </TouchableOpacity>
+                        ),
+                        headerRight: () => (
+                            <TouchableOpacity
+                                style={{ paddingHorizontal: 10 }}
+                                onPress={() => router.push('/main/account')}
+                            >
+                                <UserCircleIcon color={'white'} size={28} />
+                            </TouchableOpacity>
+                        ),
+                        headerTitle: internetAccess ? '' : '-offline mode-',
+                    }}
+                />
+            </NetworkContext.Provider>
         </UserContext.Provider>
     )
 }
