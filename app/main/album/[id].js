@@ -14,12 +14,12 @@ import { getAlbumDetail, likePost } from '../../../services/services'
 import NoInternet from '../../../components/NoInternet'
 import PostCard from '../../../components/PostCard'
 import { useSearchParams } from 'expo-router'
+import { ws } from '../../_layout'
 
 const Detail = () => {
     const { id } = useSearchParams()
     const { currentUser, setCurrentUser } = useContext(UserContext)
     const { internetAccess } = useContext(NetworkContext)
-
     const [album, setAlbum] = useState(null)
 
     useEffect(() => {
@@ -40,6 +40,7 @@ const Detail = () => {
         try {
             const res = await likePost(currentUser.id, postId)
             setCurrentUser({ ...currentUser, ...res.data })
+            ws.send('updateLikes')
         } catch (error) {
             console.error(`Error received from axios: ${JSON.stringify(error)}`)
         }

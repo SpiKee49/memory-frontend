@@ -1,7 +1,9 @@
+import * as FileSystem from 'expo-file-system'
 import * as Location from 'expo-location'
 
-import { COLORS, SIZES } from '../../constants/theme'
 import {
+    ActivityIndicator,
+    Alert,
     FlatList,
     Image,
     Modal,
@@ -12,6 +14,7 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native'
+import { COLORS, SIZES } from '../../constants/theme'
 import {
     FolderIcon,
     GlobeAltIcon,
@@ -37,12 +40,12 @@ const addPost = () => {
     const [albumModalVisible, setAlbumModalVisible] = useState(false)
     const [locationModalVisible, setLocationModalVisible] = useState(false)
     const [addLocationModal, setAddLocationModal] = useState(false)
-    const [image, setImage] = useState(null)
     const [cameraModal, setCameraModal] = useState(false)
     const [searchAlbum, setSearchAlbum] = useState('')
     const [searchLocation, setSearchLocation] = useState('')
     const [albums, setAlbums] = useState([])
     const [locations, setLocations] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
 
     const { internetAccess } = useContext(NetworkContext)
 
@@ -52,6 +55,8 @@ const addPost = () => {
     const [title, setTitle] = useState()
     const [description, setDescription] = useState()
     const [locationName, setLocationName] = useState()
+    const [image, setImage] = useState(null)
+
     useEffect(() => {
         if (internetAccess) {
             fetchAlbums()
@@ -67,13 +72,22 @@ const addPost = () => {
         if (internetAccess) fetchLocations(searchLocation)
     }, [searchLocation])
 
+    const clearForm = () => {
+        setAlbumId(null)
+        setLocation(null)
+        setTitle(null)
+        setDescription(null)
+        setLocationName(null)
+        setImage(null)
+    }
+
     const fetchAlbums = async (search) => {
         try {
             const res = await getAlbums(search)
             setAlbums(res.data)
         } catch (error) {
             console.error(
-                `Error received from axios.get: ${JSON.stringify(error)}`
+                `Error received from fetchAlbums: ${JSON.stringify(error)}`
             )
         }
     }
@@ -84,24 +98,39 @@ const addPost = () => {
             setLocations(res.data)
         } catch (error) {
             console.error(
-                `Error received from axios.get: ${JSON.stringify(error)}`
+                `Error received from fetchLocations: ${JSON.stringify(error)}`
             )
         }
     }
 
     const sendPostForm = async () => {
+        if (!title || !albumId || !locationId || !currentUser.id || !image) {
+            Alert.alert(
+                'Missing information',
+                'Make sure all fields except description are filled',
+                [{ text: 'OK' }]
+            )
+            return
+        }
+        setIsLoading(true)
         try {
             const res = await postAddPost({
                 title,
                 description,
                 albumId,
                 locationId,
+                photo: image,
                 userId: currentUser.id,
             })
+            console.log('test1')
             setAlbums(res.data)
+            console.log('test2')
+            clearForm()
+            console.log('test3')
+            setIsLoading(false)
         } catch (error) {
             console.error(
-                `Error received from axios.get: ${JSON.stringify(error)}`
+                `Error received from sendPostForm: ${JSON.stringify(error)}`
             )
         }
     }
@@ -134,6 +163,25 @@ const addPost = () => {
 
     if (!internetAccess) {
         return <NoInternet />
+    }
+
+    if (isLoading) {
+        return (
+            <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.backdrop }}>
+                <View
+                    style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
+                    <ActivityIndicator
+                        size="large"
+                        color={COLORS.secondary}
+                        style={{ marginTop: 20 }}
+                    />
+                </View>
+            </SafeAreaView>
+        )
     }
 
     return (
@@ -178,7 +226,7 @@ const addPost = () => {
                     </TouchableOpacity>
                 ) : (
                     <Image
-                        source={{ uri: image }}
+                        source={{ uri: `data:image/png;base64,` + image }}
                         style={{
                             flex: 0.8,
                             width: '100%',
@@ -371,11 +419,11 @@ const addPost = () => {
                                                             coordinate={{
                                                                 latitude:
                                                                     Number(
-                                                                        loc.longitude
+                                                                        loc.latitude
                                                                     ),
                                                                 longitude:
                                                                     Number(
-                                                                        loc.latitude
+                                                                        loc.longitude
                                                                     ),
                                                             }}
                                                         />

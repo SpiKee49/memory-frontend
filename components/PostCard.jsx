@@ -3,15 +3,31 @@ import { Image, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 
 import { HeartIcon } from 'react-native-heroicons/solid'
+import { encode as btoa } from 'base-64'
 import { getLikes } from '../services/services'
+import { ws } from '../app/_layout'
 
 const PostCard = (props) => {
     const [likes, setLikes] = useState(props.liked ? 1 : 0)
     const [liked, setLiked] = useState(props.liked ?? false)
 
+    ws.onmessage = (data) => {
+        if (data === 'updateLikes') fetchLikes()
+    }
+
     useEffect(() => {
         fetchLikes()
     }, [])
+
+    const arrayBufferToBase64 = (buffer) => {
+        let binary = ''
+        let bytes = new Uint8Array(buffer)
+        let len = bytes.byteLength
+        for (let i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i])
+        }
+        return btoa(binary)
+    }
 
     const fetchLikes = async () => {
         try {
@@ -47,7 +63,11 @@ const PostCard = (props) => {
                         borderTopLeftRadius: 25,
                         borderTopRightRadius: 25,
                     }}
-                    source={require('../public/images/placeholder-image.jpg')}
+                    source={{
+                        uri:
+                            `data:image/png;base64,` +
+                            arrayBufferToBase64(props.post.photo.data),
+                    }}
                     resizeMode="cover"
                 />
             </View>

@@ -7,6 +7,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Stack, useRouter } from 'expo-router'
 import { Text, TouchableOpacity } from 'react-native'
 
+import { API_URL } from '@env'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { UserCircleIcon } from 'react-native-heroicons/solid'
 import { postPushToken } from '../services/services'
@@ -69,20 +70,20 @@ async function registerForPushNotificationsAsync() {
     return token
 }
 
+export const ws = new WebSocket(`${API_URL}`)
+
 const Layout = () => {
     const router = useRouter()
     const [currentUser, setCurrentUser] = useState(null)
     const [internetAccess, setInternetAccess] = useState(true)
-    const [expoPushToken, setExpoPushToken] = useState('')
-    const [notification, setNotification] = useState(false)
+    const [_, setNotification] = useState(false)
     const notificationListener = useRef()
     const responseListener = useRef()
+
     useEffect(() => {
         checkConnection()
 
-        registerForPushNotificationsAsync().then((token) => {
-            return setExpoPushToken(token)
-        })
+        registerForPushNotificationsAsync()
 
         notificationListener.current =
             Notifications.addNotificationReceivedListener((notification) => {

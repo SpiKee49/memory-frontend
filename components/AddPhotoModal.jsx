@@ -1,11 +1,4 @@
-import {
-    ActivityIndicator,
-    Modal,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-} from 'react-native'
+import { ActivityIndicator, Modal, StyleSheet, Text, View } from 'react-native'
 import { COLORS, SIZES } from '../constants/theme'
 import { Camera, CameraType } from 'expo-camera'
 import React, { useState } from 'react'
@@ -94,8 +87,11 @@ const AddPhotoModal = (props) => {
 
     const takePicture = async () => {
         if (camera) {
-            const data = await camera.takePictureAsync(null)
-            setImage(data.uri)
+            const data = await camera.takePictureAsync({
+                base64: true,
+                imageType: 'png',
+            })
+            setImage(data.base64)
         }
     }
     return (
