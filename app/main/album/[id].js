@@ -32,17 +32,21 @@ const Detail = () => {
             const res = await getAlbumDetail(id)
             setAlbum(res.data)
         } catch (error) {
-            console.error(`Error received from axios: ${JSON.stringify(error)}`)
+            console.error(
+                `Error received from fetchAlbumDetail: ${JSON.stringify(error)}`
+            )
         }
     }
 
     const addLike = async (postId) => {
+        const res = await likePost(currentUser.id, postId)
+        setCurrentUser({ ...currentUser, ...res.data })
+        ws.send('update')
         try {
-            const res = await likePost(currentUser.id, postId)
-            setCurrentUser({ ...currentUser, ...res.data })
-            ws.send('updateLikes')
         } catch (error) {
-            console.error(`Error received from axios: ${JSON.stringify(error)}`)
+            console.error(
+                `Error received from addLike: ${JSON.stringify(error)}`
+            )
         }
     }
 

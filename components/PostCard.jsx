@@ -12,7 +12,7 @@ const PostCard = (props) => {
     const [liked, setLiked] = useState(props.liked ?? false)
 
     ws.onmessage = (data) => {
-        if (data === 'updateLikes') fetchLikes()
+        if (data === 'update') fetchLikes()
     }
 
     useEffect(() => {

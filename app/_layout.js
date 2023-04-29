@@ -96,6 +96,7 @@ const Layout = () => {
                     console.log(response)
                 }
             )
+        ;(async () => await AsyncStorage.removeItem('@userData'))()
 
         return () => {
             Notifications.removeNotificationSubscription(
@@ -106,14 +107,6 @@ const Layout = () => {
             )
         }
     }, [])
-
-    useEffect(() => {
-        ;(async () =>
-            await AsyncStorage.setItem(
-                '@userData',
-                JSON.stringify(currentUser)
-            ))()
-    }, [currentUser])
 
     const checkConnection = (interval) => {
         setInterval(
