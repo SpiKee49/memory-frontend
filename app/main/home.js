@@ -20,6 +20,9 @@ const Home = () => {
     useEffect(() => {
         setAlbums(currentUser.followedAlbums)
     }, [])
+    useEffect(() => {
+        setAlbums(currentUser.followedAlbums)
+    }, [currentUser])
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.backdrop }}>

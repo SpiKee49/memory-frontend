@@ -73,12 +73,12 @@ const addPost = () => {
     }, [searchLocation])
 
     const clearForm = () => {
-        setAlbumId(null)
-        setLocation(null)
-        setTitle(null)
-        setDescription(null)
-        setLocationName(null)
-        setImage(null)
+        setAlbumId('')
+        setLocation('')
+        setTitle('')
+        setDescription('')
+        setLocationName('')
+        setImage(undefined)
     }
 
     const fetchAlbums = async (search) => {
@@ -114,7 +114,7 @@ const addPost = () => {
         }
         setIsLoading(true)
         try {
-            const res = await postAddPost({
+            await postAddPost({
                 title,
                 description,
                 albumId,
@@ -122,11 +122,7 @@ const addPost = () => {
                 photo: image,
                 userId: currentUser.id,
             })
-            console.log('test1')
-            setAlbums(res.data)
-            console.log('test2')
             clearForm()
-            console.log('test3')
             setIsLoading(false)
         } catch (error) {
             console.error(

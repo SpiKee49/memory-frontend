@@ -61,16 +61,24 @@ const Login = () => {
     useEffect(() => {
         setIsLoading(true)
         ;(async () => {
-            const accessToken = await AsyncStorage.getItem('@accessToken')
-            const refreshToken = await AsyncStorage.getItem('@refreshToken')
-            const username = await AsyncStorage.getItem('@username')
-            if (accessToken && refreshToken && username) {
-                const user = await getProfile(username)
+            try {
+                const accessToken = await AsyncStorage.getItem('@accessToken')
+                const refreshToken = await AsyncStorage.getItem('@refreshToken')
+                const username = await AsyncStorage.getItem('@username')
+                if (accessToken && refreshToken && username) {
+                    const user = await getProfile(username)
 
-                setCurrentUser(user.data)
-                router.push('/main/home')
+                    setCurrentUser(user.data)
+                    router.push('/main/home')
+                }
+                setIsLoading(false)
+            } catch (error) {
+                console.error(
+                    `Error received from useEffect on login.js: ${JSON.stringify(
+                        error
+                    )}`
+                )
             }
-            setIsLoading(false)
         })()
     }, [])
 

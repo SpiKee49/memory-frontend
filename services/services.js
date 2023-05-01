@@ -39,6 +39,11 @@ export function getAlbumDetail(id) {
 export function createAlbum(data) {
     return client.post(`albums`, data)
 }
+export function followAlbum(userId, albumId) {
+    return client.put(`users/${userId}/follow`, {
+        albumId,
+    })
+}
 
 //Locations
 export function getLocs(search) {

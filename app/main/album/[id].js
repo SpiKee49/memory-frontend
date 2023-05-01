@@ -39,10 +39,10 @@ const Detail = () => {
     }
 
     const addLike = async (postId) => {
-        const res = await likePost(currentUser.id, postId)
-        setCurrentUser({ ...currentUser, ...res.data })
-        ws.send('update')
         try {
+            const res = await likePost(currentUser.id, postId)
+            setCurrentUser({ ...currentUser, ...res.data })
+            ws.send('update')
         } catch (error) {
             console.error(
                 `Error received from addLike: ${JSON.stringify(error)}`

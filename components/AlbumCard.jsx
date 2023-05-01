@@ -1,10 +1,41 @@
 import { COLORS, SIZES } from '../constants/theme'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
 
-import React from 'react'
 import { StarIcon } from 'react-native-heroicons/solid'
+import { UserContext } from '../app/_layout'
+import { followAlbum } from '../services/services'
 
 function AlbumCard(props) {
+    const [isFollowing, setIsFollowing] = useState(false)
+    const { currentUser, setCurrentUser } = useContext(UserContext)
+
+    useEffect(() => {
+        setIsFollowing(
+            currentUser.followedAlbums
+                .map((album) => album.id)
+                .includes(props.album.id)
+        )
+    }, [])
+    useEffect(() => {
+        setIsFollowing(
+            currentUser.followedAlbums
+                .map((album) => album.id)
+                .includes(props.album.id)
+        )
+    }, [currentUser])
+
+    const handleFollow = async () => {
+        try {
+            const res = await followAlbum(currentUser.id, props.album.id)
+            setCurrentUser({ ...currentUser, ...res.data })
+        } catch (error) {
+            console.error(
+                `Error received from addLike: ${JSON.stringify(error)}`
+            )
+        }
+    }
+
     return (
         <View
             style={{
@@ -45,7 +76,13 @@ function AlbumCard(props) {
                     </Text>
                 </View>
 
-                <TouchableOpacity style={{ opacity: 0.2 }}>
+                <TouchableOpacity
+                    style={{ opacity: isFollowing ? 1 : 0.2 }}
+                    onPress={() => {
+                        handleFollow()
+                        setIsFollowing(!isFollowing)
+                    }}
+                >
                     <StarIcon color={COLORS.secondary} />
                 </TouchableOpacity>
             </View>
